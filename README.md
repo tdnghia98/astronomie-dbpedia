@@ -3,4 +3,4 @@ Mini DBPedia search engine
 
 Libs : 
 
-https://github.com/aio-libs/aiosparql
+https://github.com/antoniogarrote/rdfstore-js
