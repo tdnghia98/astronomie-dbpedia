@@ -7,8 +7,29 @@ PREFIX dbr: <http://dbpedia.org/resource/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX ling: <http://purl.org/linguistics/gold/>
 
-SELECT ?planetName ?planetVolume WHERE {
-    ?planet ling:hypernym dbr:Planet;
+SELECT DISTINCT * WHERE {
+    ?planet rdf:type dbo:Planet;
         rdfs:label ?planetName;
-        dboPlanet:volume ?planetVolume.
+        # dbp:angularSize ?planetAngularSize;
+        # dbp:meanRadius ?planetRadius;
+        # dbo:meanTemperature ?planetTemp.
+        dbo:volume ?planetVolume.
+        
+        # dboPlanet:averageSpeed ?planetSpeed.
+    FILTER(LANGMATCHES(LANG(?planetName), "EN") 
+        && (ABS(?planetVolume - 57.74)/57.74) < 0.5).
 }
+
+# SELECT DISTINCT (count(?planet) as ?planetCount) WHERE {
+#     ?planet rdf:type dbo:Planet;
+#         rdfs:label ?planetName;
+#         # dbp:angularSize ?planetAngularSize;
+#         # dbp:meanRadius ?planetRadius;
+#         # dboPlanet:volume ?planetVolume.
+#         dbo:volume ?planetVolume.
+#         # dboPlanet:averageSpeed ?planetSpeed.
+#         # dbo:meanTemperature ?planetTemp
+#     FILTER(LANGMATCHES(LANG(?planetName), "EN"))
+# }
+
+
