@@ -1,10 +1,10 @@
-Info de base
+# Info de base
 PREFIX fo: <http://www.w3.org/1999/XSL/Format#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dbo: <http://dbpedia.org/ontology/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbp: <http://dbpedia.org/property/>
-SELECT DISTINCT ?name ?volume ?minTemp ?maxTemp ?moyTemp ?masse ?speed ?surface ?gravite ?pression WHERE {
+SELECT DISTINCT ?name ?volume AVG(?minTemp) AS ?minTemperature AVG(?maxTemp) AS ?maxTemperature AVG(?moyTemp) AS ?moyTemperature ?masse ?speed ?surface ?gravite ?pression WHERE {
   	?planet a dbo:Planet;
    	rdfs:label ?label.
     OPTIONAL {   	
@@ -36,21 +36,14 @@ SELECT DISTINCT ?name ?volume ?minTemp ?maxTemp ?moyTemp ?masse ?speed ?surface 
   	}
   	OPTIONAL {  
     	?planet foaf:name ?name.
-    	FILTER(strStarts(?name, Mars)).
+    	FILTER(strStarts(?name, 'Jupiter')).
   	}
-    FILTER(strStarts(?label, 'Neptune')).
+    FILTER(strStarts(?label, 'Jupiter')).
 }
-ORDER BY ASC(?minTemp) LIMIT 1
 
 
 
-
-
-
-
-
-
-Composition de l’athmosphere
+# Composition de l’athmosphere
 PREFIX fo: <http://www.w3.org/1999/XSL/Format#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dbo: <http://dbpedia.org/ontology/>
@@ -69,7 +62,7 @@ SELECT DISTINCT ?athmospere WHERE {
     FILTER(strStarts(?label, 'Mars')).
 }
 
-Date de découverte
+# Date de découverte
 PREFIX fo: <http://www.w3.org/1999/XSL/Format#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dbo: <http://dbpedia.org/ontology/>
