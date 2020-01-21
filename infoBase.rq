@@ -1,0 +1,92 @@
+Info de base
+PREFIX fo: <http://www.w3.org/1999/XSL/Format#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbp: <http://dbpedia.org/property/>
+SELECT DISTINCT ?name ?volume ?minTemp ?maxTemp ?moyTemp ?masse ?speed ?surface ?gravite ?pression WHERE {
+  	?planet a dbo:Planet;
+   	rdfs:label ?label.
+    OPTIONAL {   	
+    	?planet dbo:minimumTemperature ?minTemp.
+  	}	
+  	OPTIONAL {   	
+    	?planet dbo:maximumTemperature ?maxTemp.
+  	}	
+  	OPTIONAL {   	
+    	?planet dbo:meanTemperature ?moyTemp.
+  	}	
+  	OPTIONAL {   	
+    	?planet dbo:volume ?volume.
+  	}	
+  	OPTIONAL {   	
+    	?planet dbo:averageSpeed ?speed.
+  	}
+  	OPTIONAL {   	
+    	?planet dbp:mass ?masse.
+  	}
+  	OPTIONAL {   	
+    	?planet dbp:surfaceArea ?surface.
+  	}
+  	OPTIONAL {   	
+    	?planet dbp:surfaceGrav ?gravite.
+  	}
+  	OPTIONAL {   	
+    	?planet dbp:surfacePressure ?pression.
+  	}
+  	OPTIONAL {  
+    	?planet foaf:name ?name.
+    	FILTER(strStarts(?name, Mars)).
+  	}
+    FILTER(strStarts(?label, 'Neptune')).
+}
+ORDER BY ASC(?minTemp) LIMIT 1
+
+
+
+
+
+
+
+
+
+Composition de l’athmosphere
+PREFIX fo: <http://www.w3.org/1999/XSL/Format#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbp: <http://dbpedia.org/property/>
+SELECT DISTINCT ?athmospere WHERE {
+  	?planet a dbo:Planet;
+   	rdfs:label ?label.
+  	OPTIONAL {   	
+    	?planet dbp:atmosphereComposition ?athmospere.
+  	}	
+  	OPTIONAL {  
+    	?planet foaf:name ?name.
+    	FILTER(strStarts(?name, Mars)).
+  	}
+    FILTER(strStarts(?label, 'Mars')).
+}
+
+Date de découverte
+PREFIX fo: <http://www.w3.org/1999/XSL/Format#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbp: <http://dbpedia.org/property/>
+SELECT DISTINCT ?name ?decouvertPar ?dateDecouverte WHERE {
+  	?planet a dbo:Planet;   	
+  	rdfs:label ?label.
+  	OPTIONAL {   	
+    	?planet dbo:discoverer ?decouvertPar.
+  	}
+  	OPTIONAL {   	
+    	?planet dbo:discovered ?dateDecouverte.
+  	}
+  	OPTIONAL {  
+    	?planet foaf:name ?name.
+    	FILTER(strStarts(?name, 'Neptune')).
+  	}
+    FILTER(strStarts(?label, 'Neptune')).  	
+}
