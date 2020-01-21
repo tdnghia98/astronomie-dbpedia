@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Astropedia</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="./style/style.css">
+
+  <!-- Js -->
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="./js/query.js"></script>
+  <script type="text/javascript" src="./js/autocomplete.js"></script>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Astropedia</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <span class="navbar-text">
+        Find out anything about any planet!
+      </span>
+    </div>
+  </nav>
+  <br />
+  <!-- Search form -->
+  <div class="search-form">
+    <div class="md-form active-cyan active-cyan-2 mb-3">
+      <input class="form-control" type="text" placeholder="Search a planet.." aria-label="Search" name="planet-input" id="planet-input" list="planetNames">
+    </div>
+    <datalist id="planetNames">
+    </datalist>
+    <input type="button" class="btn btn-outline-primary" onclick="getPlanetInfo()" name="search-submit" id="search-submit" value="Go!" />
+  </div>
+
+  <br />
+
+  <div id="planet-info-table">
+    <table class="table table-hover">
+      <tbody>
+        <tr id="planet-name-row">
+          <td>Planet name: </td>
+          <td id="planet-name"></td>
+        </tr>
+        <tr id="planet-volume-row">
+          <td>Volume: </td>
+          <td id="volume"></td>
+        </tr>
+        <tr id="planet-min-temp">
+          <td>Minimum Temperature</td>
+          <td id="min-temp"></td>
+        </tr>
+        <tr id="planet-max-temp">
+          <td>Maximum Temperature</td>
+          <td id="max-temp"></td>
+        </tr>
+        <tr id="planet-moy-temp">
+          <td>Mean Temperature</td>
+          <td id="moy-temp"></td>
+        </tr>
+        <tr id="planet-mass">
+          <td>Mass</td>
+          <td id="mass"></td>
+        </tr>
+        <tr id="planet-surface">
+          <td>Surface</td>
+          <td id="surface"></td>
+        </tr>
+        <tr id="planet-gravity">
+          <td>Gravity</td>
+          <td id="gravity"></td>
+        </tr>
+        <tr id="planet-pression">
+          <td>Pression</td>
+          <td id="pression"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+
+<script>
+  $(document).ready(function() {
+    autoComplete();
+  })
+
+  var inputPlanetName = document.getElementById("planet-input");
+  inputPlanetName.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+      document.getElementById("GetInfo").click();
+    }
+  });
+</script>
+
+</html>
