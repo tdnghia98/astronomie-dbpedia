@@ -1,0 +1,15 @@
+select ?name ?thumbnail where {
+  {
+    ?planet rdf:type dbo:Planet ;
+    dbo:thumbnail ?thumbnail ;
+    rdfs:label ?name .
+  }
+  UNION
+  {
+    ?planet rdf:type dbo:Star ;
+    dbo:thumbnail ?thumbnail ;
+    rdfs:label ?name .
+  }
+  FILTER (langMatches(lang(?name), "EN"))
+  FILTER (contains(?name, "<ASTRE_NAME>"))
+}

@@ -1,0 +1,32 @@
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dboPlanet: <http://dbpedia.org/ontology/Planet/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ling: <http://purl.org/linguistics/gold/>
+
+////////////////
+
+select ?planet ?labelPlanet ?sat ?name
+where {
+
+?sat dbp:satelliteOf ?planet .
+?sat foaf:name ?name .
+?planet foaf:name ?labelPlanet .
+
+filter (contains(?labelPlanet,"Earth"))
+
+} LIMIT 1000
+
+//////////////// POUR LA LUNE ET PLUTON
+
+select ?planet ?sat
+where {
+
+?sat dbp:satelliteOf ?planet .
+FILTER(datatype(?planet)=rdf:langString && contains(str(?planet),"Earth"))
+
+
+} LIMIT 1000
