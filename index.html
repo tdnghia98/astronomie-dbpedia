@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<style>
+    *,
+    *:before,
+    *:after {
+        box-sizing: border-box;
+    }
+
+    .critere-box {
+        width: 100%;
+    }
+
+    .slider {
+        -webkit-appearance: none;
+        width: calc(100% - (73px));
+        height: 10px;
+        border-radius: 5px;
+        background: #d2d2d3;
+        outline: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #2c3e50;
+        cursor: pointer;
+        transition: background .15s ease-in-out;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+        background: #1abc9c;
+    }
+
+    .sliderValue {
+        display: inline-block;
+        position: relative;
+        width: 60px;
+        color: #fff;
+        line-height: 20px;
+        text-align: center;
+        border-radius: 5px;
+        background: #2c3e50;
+        padding: 5px 10px;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+<head>
+    <title>Page Title</title>
+</head>
+
+<body>
+
+    <h1>Planete similaire</h1>
+    <p>Choisir les criteres</p>
+    <div class="critere-box">
+        <input type="checkbox" name="volume" id="volumeCheckbox" checked>Volume <br />
+        <input class="slider" type="range" name="volumeSlider" id="volumeSlider" min="1" max="100" value="50">
+
+        <span class="sliderValue" id="volumeValue"></span>
+
+    </div>
+    <div class="critere-box">
+        <input type="checkbox" name="temperature" id="temperatureCheckbox" checked>Temperature <br>
+        <input class="slider" type="range" name="temperatureSlider" id="temperatureSlider" min="1" max="100" value="50">
+        <div>
+            <span id="temperatureValue"></span>
+        </div>
+    </div>
+    <div class="critere-box">
+        <input type="checkbox" name="vitesse" id="vitesseCheckbox" checked>Vitesse <br>
+        <input class="slider" type="range" name="vitesseSlider" id="vitesseSlider" min="1" max="100" value="50">
+        <div>
+            <span id="vitesseValue"></span>
+        </div>
+    </div>
+    <button id="searchSimilaireBouton">Search</button>
+</body>
+
+<script>
+    let sliderFunction = function (sliderID, sliderValueInputID) {
+        sliderValue = $(`#${sliderID}`).val();
+        $(`#${sliderValueInputID}`).html(sliderValue);
+        $(`#${sliderID}`).on('change input', function () {
+            sliderValue = $(`#${sliderID}`).val();
+            $(`#${sliderValueInputID}`).html(sliderValue);
+        });
+
+    }
+
+    $(function () {
+        sliderFunction('volumeSlider', 'volumeValue');
+        sliderFunction('temperatureSlider', 'temperatureValue');
+        sliderFunction('vitesseSlider', 'vitesseValue');
+
+        $('#searchSimilaireBouton').on('click', construireRequete);
+    });
+    let neptuneVolume = 57.74;
+    let neptuneTemperature = 55.0;
+    let neptuneSpeed = 5.43;
+    let filter = `FILTER(LANGMATCHES(LANG(?planetName), "EN")`;
+    let predicates = ``;
+
+
+    let construireRequete = function () {
+        let volumeSliderValue = $('#volumeSlider').val() / 100;
+        let temperatureSliderValue = $('#temperatureSlider').val() / 100;
+        let speedSliderValue = $('#vitesseSlider').val() / 100;
+
+        if ($('#volumeCheckbox').is(":checked")) {
+            predicates += `?planet dbo:volume ?planetVolume.`;
+            filter += ` && (ABS(?planetVolume - ${neptuneVolume})/${neptuneVolume}) < ${volumeSliderValue}`;
+        }
+
+        if ($('#temperatureCheckbox').is(":checked")) {
+
+            predicates += `?planet dbo:meanTemperature ?planetTemp.`;
+            filter +=
+                ` && (ABS(?planetTemp - ${neptuneTemperature})/${neptuneTemperature}) < ${temperatureSliderValue}`;
+        }
+
+        if ($('#vitesseCheckbox').is(":checked")) {
+            predicates += `?planet dboPlanet:averageSpeed ?planetSpeed.`;
+            filter += ` && (ABS(xsd:double(?planetSpeed) - ${neptuneSpeed})/${neptuneSpeed}) < ${speedSliderValue}`;
+        }
+
+        // Terminer les predicats
+        filter += `).`
+        console.log(predicates);
+        console.log(filter);
+        let requete = `SELECT DISTINCT * WHERE {
+        ?planet rdf:type dbo:Planet;
+        rdfs:label ?planetName;
+        ${predicates}
+        ${filter}
+        }`;
+        console.log(requete);
+    }
+</script>
+
+</html>
