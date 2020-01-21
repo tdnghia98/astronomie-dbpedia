@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #myRange {
+            width: 100%;
+            overflow: hidden;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Voir les objets connus pour une année</h1>
+    <div class="slidecontainer">
+        <input type="range" min="1600" max="2020" value="1800" class="slider" id="myRange">
+    </div>
+    <p>Année choisie :</p>
+    <input type="text" id="dateOutput">
+    <p>
+        Nombre d'objets connues : <div id="nbObject">0</div>
+    </p>
+    <p>
+        Liste des objets connus :
+        <div id="objects">
+
+        </div>
+    </p>
+</body>
+</html>
+<script>
+    let slider = document.getElementById("myRange");
+    let output = document.getElementById("dateOutput");
+    output.value = slider.value;
+
+    slider.oninput = function() {
+        output.value = this.value;
+    };
+
+    output.onchange = function() {
+        slider.value = output.value;
+    };
+
+    let req = "select ?planet ?label\n" +
+        "where {\n" +
+        "?planet a dbo:Planet.\n" +
+        "?planet dbo:discovered ?date.\n" +
+        "?planet foaf:name ?label.\n" +
+        "} \n" +
+        "FILTER (?date < \""+slider.value+"-01-01\"^^xsd:date)\n"+
+        "ORDER BY ASC(?date)";
+
+</script>
