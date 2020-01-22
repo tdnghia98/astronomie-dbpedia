@@ -85,21 +85,41 @@ function insertGeneralInfoIntoTable(result) {
   document.getElementById('pression').innerHTML = pression;
 }
 
+function emptyTable() {
+  document.getElementById('planet-name').innerHTML = "";
+  document.getElementById('volume').innerHTML = ""
+  document.getElementById('min-temp').innerHTML = ""
+  document.getElementById('max-temp').innerHTML = "";
+  document.getElementById('moy-temp').innerHTML = ""
+  document.getElementById('mass').innerHTML = "";
+  document.getElementById('surface').innerHTML = "";
+  document.getElementById('gravity').innerHTML = "";
+  document.getElementById('pression').innerHTML = "";
+  document.getElementById("satellites").innerHTML = "";
+}
+
+//Helper function to build query
+function buildUrlWithQuery(query) {
+  const baseURL = 'https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
+  const queryParams = '&format=application%2Fsparql-results%2Bjson&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
+  const encodedQuery = baseURL + encodeURI(query) + queryParams;
+
+  return encodedQuery;
+}
+
 function getPlanetInfo() {
   emptyTable();
   getPlanetGeneralInfo();
   getPlanetComposition();
   getThumbnailImage();
   getSatelliteInfo();
+  getDiscoveryDate();
 }
 
 function getPlanetGeneralInfo() {
-  let planetName = parsePlanetName();
-  var baseURL = 'https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
-  var queryParams = '&format=application%2Fsparql-results%2Bjson&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
+  const planetName = parsePlanetName();
 
-  //Queries definition
-  var generalInfoQuery = `
+  const generalInfoQuery = `
   SELECT DISTINCT ?name ?volume AVG(?minTemp) AS ?minTemperature AVG(?maxTemp) AS ?maxTemperature AVG(?moyTemp) AS ?moyTemperature ?masse ?speed ?surface ?gravite ?pression WHERE {
   	?planet a dbo:Planet;
    	rdfs:label ?label.
@@ -137,8 +157,7 @@ function getPlanetGeneralInfo() {
     FILTER(strStarts(?label, '${planetName}')).
 }
 `
-
-  var encodedGeneralInfoQuery = baseURL + encodeURI(generalInfoQuery) + queryParams;
+  const encodedGeneralInfoQuery = buildUrlWithQuery(generalInfoQuery);
 
   //Ajax call to DBPedia
   $.ajax({
@@ -156,11 +175,8 @@ function getPlanetGeneralInfo() {
 }
 
 function getPlanetComposition() {
-  let planetName = parsePlanetName();
-  var baseURL = 'https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
-  var queryParams = '&format=application%2Fsparql-results%2Bjson&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
-
-  var planetCompositionQuery = `
+  const planetName = parsePlanetName();
+  const planetCompositionQuery = `
   SELECT DISTINCT ?atmosphere WHERE {
   	?planet a dbo:Planet;
    	rdfs:label ?label.
@@ -174,7 +190,7 @@ function getPlanetComposition() {
     FILTER(strStarts(?label, '${planetName}')).
 }`
 
-  var encodedPlanetCompositionQuery = baseURL + encodeURI(planetCompositionQuery) + queryParams;
+  const encodedPlanetCompositionQuery = buildUrlWithQuery(planetCompositionQuery);
 
   $.ajax({
     url: encodedPlanetCompositionQuery,
@@ -183,7 +199,6 @@ function getPlanetComposition() {
         console.log("No results found for this planet")
       }
       let atmospheres = result.results.bindings;
-      console.log(atmospheres)
       let composition = "";
       for (var i = 0; i < atmospheres.length; i++) {
         try { // Try because DBPedia doesn't send consistent data, so type might not be present
@@ -206,12 +221,9 @@ function getPlanetComposition() {
 }
 
 function getThumbnailImage() {
-  let planetName = parsePlanetName();
-  var baseURL = 'https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
-  var queryParams = '&format=application%2Fsparql-results%2Bjson&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
-
-  var thumbnailQuery = `
-  select ?name ?thumbnail where {
+  const planetName = parsePlanetName();
+  const thumbnailQuery = `
+  SELECT ?name ?thumbnail WHERE {
   {
     ?planet rdf:type dbo:Planet ;
     dbo:thumbnail ?thumbnail ;
@@ -227,7 +239,7 @@ function getThumbnailImage() {
   FILTER (contains(?name, "${planetName}"))
 }`
 
-  var encodedThumbnailQuery = baseURL + encodeURI(thumbnailQuery) + queryParams;
+  const encodedThumbnailQuery = buildUrlWithQuery(thumbnailQuery);
   /*
     //Ajax call to DBPedia
     $.ajax({
@@ -246,20 +258,18 @@ function getThumbnailImage() {
 }
 
 function getSatelliteInfo() {
-  let planetName = parsePlanetName();
-  var baseURL = 'https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
-  var queryParams = '&format=application%2Fsparql-results%2Bjson&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
+  const planetName = parsePlanetName();
   var satelliteQuery;
   if (planetName != "Earth") {
     satelliteQuery = `
-    select ?planet ?labelPlanet ?sat ?name
-    where {
+    SELECT ?planet ?labelPlanet ?sat ?name
+    WHERE {
 
     ?sat dbp:satelliteOf ?planet .
     ?sat foaf:name ?name .
     ?planet foaf:name ?labelPlanet .
 
-    filter (contains(?labelPlanet,"${planetName}"))
+    FILTER (contains(?labelPlanet,"${planetName}"))
 
     }
     `
@@ -275,7 +285,7 @@ SELECT ?planet ?sat ?name
     `
   }
 
-  const encodedSatelliteQuery = baseURL + encodeURI(satelliteQuery) + queryParams;
+  const encodedSatelliteQuery = buildUrlWithQuery(satelliteQuery);
 
   $.ajax({
     url: encodedSatelliteQuery,
@@ -300,15 +310,32 @@ SELECT ?planet ?sat ?name
   })
 }
 
-function emptyTable() {
-  document.getElementById('planet-name').innerHTML = "";
-  document.getElementById('volume').innerHTML = ""
-  document.getElementById('min-temp').innerHTML = ""
-  document.getElementById('max-temp').innerHTML = "";
-  document.getElementById('moy-temp').innerHTML = ""
-  document.getElementById('mass').innerHTML = "";
-  document.getElementById('surface').innerHTML = "";
-  document.getElementById('gravity').innerHTML = "";
-  document.getElementById('pression').innerHTML = "";
-  document.getElementById("satellites").innerHTML = "";
+function getDiscoveryDate() {
+  const planetName = parsePlanetName();
+  const discoveryDateQuery = `
+  SELECT ?planet ?label ?date
+  WHERE {
+
+  ?planet a dbo:Planet.
+  ?planet dbo:discovered ?date.
+  ?planet foaf:name ?label.
+
+  filter(contains(?label,"${planetName}"))
+  }
+  ORDER BY ASC(?date)
+  `
+  const encodedDiscoveryDateQuery = buildUrlWithQuery(discoveryDateQuery);
+
+  $.ajax({
+    url: encodedDiscoveryDateQuery,
+    success: function(result) {
+      //surround with try catch
+      date = result.results.bindings[0].date.value
+      document.getElementById("discovery-date").innerHTML = date
+    },
+    error: function(error) {
+      console.log(error)
+    }
+  })
+
 }

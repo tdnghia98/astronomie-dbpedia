@@ -28,7 +28,6 @@ let construireRequete = function() {
   let filter = `FILTER(LANGMATCHES(LANG(?planetName), "EN")`;
   let predicates = ``;
 
-
   if ($('#volumeCheckbox').is(":checked")) {
     predicates += `?planet dbo:volume ?planetVolume.`;
     filter += ` && (ABS(?planetVolume - ${neptuneVolume})/${neptuneVolume}) < ${volumeSliderValue}`;
