@@ -39,7 +39,7 @@
     </div>
     <datalist id="planetNames">
     </datalist>
-    <input type="button" class="btn btn-outline-primary" onclick="getPlanetInfo()" name="search-submit" id="search-submit" value="Go!" />
+    <input type="button" class="btn btn-outline-primary" onclick="getPlanetInfo()" name="search-submit" id="getInfo" value="Go!" />
   </div>
 
   <br />
@@ -87,6 +87,10 @@
           <td>Satellites</td>
           <td id="satellites"></td>
         </tr>
+        <tr id="planet-composition">
+          <td>Composition</td>
+          <td id="composition"></td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -102,7 +106,7 @@
   inputPlanetName.addEventListener("keyup", function(event) {
     event.preventDefault();
     if (event.keyCode === 13) {
-      document.getElementById("GetInfo").click();
+      document.getElementById("getInfo").click();
     }
   });
 </script>

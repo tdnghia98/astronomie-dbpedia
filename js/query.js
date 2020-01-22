@@ -153,9 +153,6 @@ function getPlanetGeneralInfo() {
       console.log(error)
     }
   })
-
-  getThumbnailImage();
-  getPlanetComposition();
 }
 
 function getPlanetComposition() {
@@ -164,11 +161,11 @@ function getPlanetComposition() {
   var queryParams = '&format=application%2Fsparql-results%2Bjson&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
 
   var planetCompositionQuery = `
-  SELECT DISTINCT ?athmospere WHERE {
+  SELECT DISTINCT ?atmosphere WHERE {
   	?planet a dbo:Planet;
    	rdfs:label ?label.
   	OPTIONAL {
-    	?planet dbp:atmosphereComposition ?athmospere.
+    	?planet dbp:atmosphereComposition ?atmosphere.
   	}
   	OPTIONAL {
     	?planet foaf:name ?name.
@@ -185,6 +182,21 @@ function getPlanetComposition() {
       if (result.results.bindings.length == 0) {
         console.log("No results found for this planet")
       }
+      let atmospheres = result.results.bindings;
+      console.log(atmospheres)
+      let composition = "";
+      for (var i = 0; i < atmospheres.length; i++) {
+        try { // Try because DBPedia doesn't send consistent data, so type might not be present
+          if (atmospheres[i].atmosphere.type === "uri") {
+            //Parse value to get gas name
+            composition = composition + atmospheres[i].atmosphere.value.split('/').slice(-1).pop() + ", "
+          }
+        } catch (e) {
+
+        }
+      }
+      composition = composition.substring(0, composition.length - 2);
+      document.getElementById("composition").innerHTML = composition;
     },
     error: function(error) {
       console.log(error)
@@ -273,7 +285,6 @@ SELECT ?planet ?sat ?name
       }
       //Add data to table
       let results = result.results.bindings;
-      console.log(results)
       if (results.length != 0) {
         let satellites = "";
         satellites = satellites + results[0].name.value
