@@ -3,7 +3,6 @@
     box-shadow: 0 1px 0 0 #4dd0e1;
 }
 
-
 .critere-box {
     width: 100%;
 }
@@ -58,4 +57,8 @@
 
 .row.critere-box {
     padding: 15px;
+
+#myRange {
+    width: 100%;
+    overflow: hidden;
 }
