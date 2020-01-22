@@ -330,7 +330,10 @@ function getDiscoveryDate() {
     url: encodedDiscoveryDateQuery,
     success: function(result) {
       //surround with try catch
-      date = result.results.bindings[0].date.value
+      let date = "No discovery date information found for this planet";
+      if (result.results.bindings[0].date.value) {
+        date = result.results.bindings[0].date.value
+      }
       document.getElementById("discovery-date").innerHTML = date
     },
     error: function(error) {
