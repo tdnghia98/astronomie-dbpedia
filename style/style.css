@@ -1,4 +1,61 @@
 .active-cyan-2 input[type=text]:focus:not([readonly]) {
-border-bottom: 1px solid #4dd0e1;
-box-shadow: 0 1px 0 0 #4dd0e1;
+    border-bottom: 1px solid #4dd0e1;
+    box-shadow: 0 1px 0 0 #4dd0e1;
+}
+
+
+.critere-box {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: calc(100% - (73px));
+    height: 10px;
+    border-radius: 5px;
+    background: #d2d2d3;
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #2c3e50;
+    cursor: pointer;
+    transition: background .15s ease-in-out;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    background: #1abc9c;
+}
+
+.sliderValue {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    color: #fff;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 5px;
+    background: #2c3e50;
+    padding: 5px 10px;
+    margin-left: 8px;
+}
+
+.sliderValue:after {
+    position: absolute;
+    top: 8px;
+    left: -7px;
+    widows: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-right: 7px solid #2c3e50;
+    border-bottom: 7px solid transparent;
+    content: '';
+}
+
+.row.critere-box {
+    padding: 15px;
 }

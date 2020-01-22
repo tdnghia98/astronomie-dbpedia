@@ -33,16 +33,19 @@
   </nav>
   <br />
   <!-- Search form -->
-  <div class="search-form">
-    <div class="md-form active-cyan active-cyan-2 mb-3">
-      <input class="form-control" type="text" placeholder="Search a planet.." aria-label="Search" name="planet-input" id="planet-input" list="planetNames">
+
+  <br />
+
+  <div class="container">
+    <div class="search-form">
+      <div class="md-form active-cyan active-cyan-2 mb-3">
+        <input class="form-control" type="text" placeholder="Search a planet.." aria-label="Search" name="planet-input" id="planet-input" list="planetNames">
+      </div>
     </div>
     <datalist id="planetNames">
     </datalist>
-    <input type="button" class="btn btn-outline-primary" onclick="getPlanetInfo()" name="search-submit" id="getInfo" value="Go!" />
+    <input type="button" class="btn btn-outline-primary" onclick="getPlanetInfo()" name="search-submit" id="getInfo" value="Go!" /> <br/>
   </div>
-
-  <br />
 
   <div id="planet-info-table">
     <table class="table table-hover">
@@ -95,6 +98,35 @@
     </table>
   </div>
 
+  <div class="container">
+    <h1>Planete similaire</h1>
+    <p>Choisir les criteres</p>
+    <div class="row">
+      <div class="critere-box col">
+        <input type="checkbox" name="volume" id="volumeCheckbox" checked>Volume <br />
+        <input class="slider" type="range" name="volumeSlider" id="volumeSlider" min="1" max="100" value="50">
+
+        <span class="sliderValue" id="volumeValue"></span>
+
+      </div>
+      <div class="critere-box col">
+        <input type="checkbox" name="temperature" id="temperatureCheckbox" checked>Temperature <br>
+        <input class="slider" type="range" name="temperatureSlider" id="temperatureSlider" min="1" max="100" value="50">
+        <span class="sliderValue" id="temperatureValue"></span>
+
+      </div>
+      <div class="critere-box col">
+        <input type="checkbox" name="vitesse" id="vitesseCheckbox" checked>Vitesse <br>
+        <input class="slider" type="range" name="vitesseSlider" id="vitesseSlider" min="1" max="100" value="50">
+        <span class="sliderValue" id="vitesseValue"></span>
+      </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+      <button type="button" class="btn btn-primary" id="searchSimilaireBouton">Chercher</button>
+    </div>
+
+  </div>
+
 </body>
 
 <script>
@@ -110,5 +142,6 @@
     }
   });
 </script>
+<script src="./js/planeteSimilaire.js"></script>
 
 </html>

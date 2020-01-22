@@ -1,0 +1,16 @@
+//Planètes du sytème solaire
+
+select DISTINCT STR(?n)  where {
+                             ?e foaf:name ?n;
+							 rdf:type dbo:Planet;
+							 rdf:type yago:WikicatPlanetsOfTheSolarSystem.
+                             FILTER(langMatches(lang(?n), "EN"))}
+							 
+							 
+//Les planètes avec leur étoile
+SELECT DISTINCT ?p2, ?e WHERE {
+?p2 rdf:type dbo:Planet.
+?p2 dbp:star ?e.
+?p dbp:star ?e.
+?p rdfs:label "HD 219134 f"@en
+}
