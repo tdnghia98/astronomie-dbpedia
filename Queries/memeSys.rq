@@ -1,0 +1,15 @@
+//Planètes du sytème solaire
+
+select DISTINCT STR(?n)  where {
+                             ?e foaf:name ?n;
+							 rdf:type dbo:Planet;
+							 rdf:type yago:WikicatPlanetsOfTheSolarSystem.
+                             FILTER(langMatches(lang(?n), "EN"))}
+							 
+							 
+//Les planètes avec leur étoile
+SELECT DISTINCT ?p, ?e WHERE {
+?p rdf:type dbo:Planet.
+?p dbp:star ?e.
+
+}
