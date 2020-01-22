@@ -8,8 +8,9 @@ select DISTINCT STR(?n)  where {
 							 
 							 
 //Les planètes avec leur étoile
-SELECT DISTINCT ?p, ?e WHERE {
-?p rdf:type dbo:Planet.
+SELECT DISTINCT ?p2, ?e WHERE {
+?p2 rdf:type dbo:Planet.
+?p2 dbp:star ?e.
 ?p dbp:star ?e.
-
+?p rdfs:label "HD 219134 f"@en
 }
