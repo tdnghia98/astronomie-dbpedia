@@ -9,7 +9,7 @@ function parsePlanetName() {
 //Helper function to insert the results in a table format
 function insertGeneralInfoIntoTable(result) {
   let table = document.getElementById("planet-info-table")
-  let fields = result.results.bindings
+  let fields = result.results.bindings;
   let planetName = "";
   let volume = "";
   let minTemp = "";
@@ -162,13 +162,13 @@ function getPlanetGeneralInfo() {
   //Ajax call to DBPedia
   $.ajax({
     url: encodedGeneralInfoQuery,
-    success: function(result) {
+    success: function (result) {
       if (result.results.bindings.length == 0) {
         console.log("No results found for this planet")
       }
       insertGeneralInfoIntoTable(result)
     },
-    error: function(error) {
+    error: function (error) {
       console.log(error)
     }
   })
@@ -194,7 +194,7 @@ function getPlanetComposition() {
 
   $.ajax({
     url: encodedPlanetCompositionQuery,
-    success: function(result) {
+    success: function (result) {
       if (result.results.bindings.length == 0) {
         console.log("No results found for this planet")
       }
@@ -213,7 +213,7 @@ function getPlanetComposition() {
       composition = composition.substring(0, composition.length - 2);
       document.getElementById("composition").innerHTML = composition;
     },
-    error: function(error) {
+    error: function (error) {
       console.log(error)
     }
   })
@@ -289,7 +289,7 @@ SELECT ?planet ?sat ?name
 
   $.ajax({
     url: encodedSatelliteQuery,
-    success: function(result) {
+    success: function (result) {
       if (result.results.bindings.length == 0) {
         console.log("No satellites found for this planet")
       }
@@ -304,7 +304,7 @@ SELECT ?planet ?sat ?name
         document.getElementById("satellites").innerHTML = satellites;
       }
     },
-    error: function(error) {
+    error: function (error) {
       console.log(error)
     }
   })
@@ -328,7 +328,7 @@ function getDiscoveryDate() {
 
   $.ajax({
     url: encodedDiscoveryDateQuery,
-    success: function(result) {
+    success: function (result) {
       //surround with try catch
       let date = "No discovery date information found for this planet";
       if (result.results.bindings[0].date.value) {
@@ -336,7 +336,7 @@ function getDiscoveryDate() {
       }
       document.getElementById("discovery-date").innerHTML = date
     },
-    error: function(error) {
+    error: function (error) {
       console.log(error)
     }
   })
