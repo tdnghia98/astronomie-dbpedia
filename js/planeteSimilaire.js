@@ -10,20 +10,23 @@ let sliderFunction = function (sliderID, sliderValueInputID) {
 
 function getPlaneteSimilaire() {
     let query = construireRequete();
-    const encodedPlaneteSimilaireQuery = buildUrlWithQuery(query);
-    var results;
-    $.ajax({
-        url: encodedPlaneteSimilaireQuery,
-        success: result => {
-            if (result.results.bindings.length == 0) {
-                console.log('No satellites found for this planet');
-            }
-            results = result.results.bindings;
-            completerTablePlaneteSimilaire(results);
-        },
-        error: err => console.log(err)
-    });
-    return results;
+    if (query) {
+        const encodedPlaneteSimilaireQuery = buildUrlWithQuery(query);
+        var results;
+        $.ajax({
+            url: encodedPlaneteSimilaireQuery,
+            success: result => {
+                if (result.results.bindings.length == 0) {
+                    console.log('No satellites found for this planet');
+                }
+                results = result.results.bindings;
+                completerTablePlaneteSimilaire(results);
+            },
+            error: err => console.log(err)
+        });
+        return results;
+    }
+
 }
 
 $(function () {
@@ -53,47 +56,69 @@ function completerTablePlaneteSimilaire(results) {
 let construireRequete = function () {
     let volumeSliderValue = $('#volumeSlider').val() / 100;
     let temperatureSliderValue = $('#temperatureSlider').val() / 100;
-    let speedSliderValue = $('#vitesseSlider').val() / 100;
+    let vitesseSliderValue = $('#vitesseSlider').val() / 100;
 
-    let neptuneVolume = 57.74;
-    let neptuneTemperature = 55.0;
-    let neptuneSpeed = 5.43;
+    let planeteVolume = $('#volume').text();
+    let planeteTemperature = $('#moy-temp').text();
+    let planeteVitess = 'No';
+    let select = `?planetName`;
     let filter = `FILTER(LANGMATCHES(LANG(?planetName), "EN")).`;
     let predicates = ``;
 
     if ($('#volumeCheckbox').is(':checked')) {
-        predicates += `
-    ?planet dbo:volume ?planetVolume.`;
-        filter += ` 
-    FILTER(ABS((?planetVolume - ${neptuneVolume})/${neptuneVolume}) < ${volumeSliderValue}).`;
+        if (planeteVolume && !planeteVolume.includes('No')) {
+            select += `?planetVolume 
+            `
+            predicates += `
+        ?planet dbo:volume ?planetVolume.`;
+            filter += ` 
+        FILTER(ABS((?planetVolume - ${planeteVolume})/${planeteVolume}) < ${volumeSliderValue}).`;
+        } else {
+            console.log('Null Volume');
+        }
     }
 
     if ($('#temperatureCheckbox').is(':checked')) {
-        predicates += `
-    ?planet dbo:meanTemperature ?planetTemp.`;
-        filter += ` 
-      FILTER(ABS((?planetTemp - ${neptuneTemperature})/${neptuneTemperature}) < ${temperatureSliderValue}).`;
+        if (planeteTemperature && !planeteTemperature.includes('No')) {
+            select += `(AVG(?planetTemp) as ?temp)
+            `;
+            predicates += `
+        ?planet dbo:meanTemperature ?planetTemp.`;
+            filter += ` 
+        FILTER(ABS((?planetTemp - ${planeteTemperature})/${planeteTemperature}) < ${temperatureSliderValue}).`;
+        } else {
+            console.log('Null temp');
+        }
     }
 
     if ($('#vitesseCheckbox').is(':checked')) {
-        predicates += `
-    ?planet dboPlanet:averageSpeed ?planetSpeed.`;
-        filter += ` 
-        FILTER(ABS((xsd:double(?planetSpeed) - ${neptuneSpeed})/${neptuneSpeed}) < ${speedSliderValue}).`;
+        if (planeteVitess && !planeteVitess.includes('No')) {
+            select += `?planetVitesse
+            `;
+            predicates += `
+            ?planet dboPlanet:averageSpeed ?planetVitesse.`;
+            filter += ` 
+            FILTER(ABS((xsd:double(?planetVitesse) - ${planeteVitess})/${planeteVitess}) < ${vitesseSliderValue}).`;
+        } else {
+            console.log('Null vitess');
+        }
     }
-    // Terminer les predicats
-    let requete = `
-        PREFIX dboPlanet: <http://dbpedia.org/ontology/Planet/>
-      
-        SELECT 
-        ?planetName 
-        ?planetVolume 
-        ?planetSpeed 
-        (AVG(?planetTemp) as ?temp)
-        WHERE {
-        ?planet rdf:type dbo:Planet;
-        rdfs:label ?planetName.
-        ${predicates}
-        ${filter}}`;
-    return requete;
+
+    if (predicates) {
+
+        let requete = `
+            PREFIX dboPlanet: <http://dbpedia.org/ontology/Planet/>
+          
+            SELECT 
+            ${select}
+            WHERE {
+            ?planet rdf:type dbo:Planet;
+            rdfs:label ?planetName.
+            ${predicates}
+            ${filter}}`;
+        return requete;
+    } else {
+        console.log('No predicate');
+        return null;
+    }
 };
