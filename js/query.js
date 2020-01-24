@@ -2,12 +2,15 @@ function parsePlanetName() {
   //Mettre tout en minuscule et capitalizer le nom de la planète e
   let planetName = document.getElementById("planet-input").value;
   planetName = planetName.toLowerCase();
-  planetName = planetName.charAt(0).toUpperCase() + planetName.slice(1);
+ // planetName = planetName.charAt(0).toUpperCase() + planetName.slice(1);
+  planetName.replace(/\(/g,'');
+  planetName.replace(/\)/g,'');
   return planetName;
 }
 
 //Helper function to insert the results in a table format
 function insertGeneralInfoIntoTable(result) {
+  console.log(result);
   let table = document.getElementById("planet-info-table")
   let fields = result.results.bindings;
   let planetName = "";
@@ -100,7 +103,7 @@ function emptyTable() {
 
 //Helper function to build query
 function buildUrlWithQuery(query) {
-  const baseURL = 'https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
+  const baseURL = 'http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
   const queryParams = '&format=application%2Fsparql-results%2Bjson&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
   const encodedQuery = baseURL + encodeURI(query) + queryParams;
 
@@ -152,11 +155,11 @@ function getPlanetGeneralInfo() {
   	}
   	OPTIONAL {
     	?planet foaf:name ?name.
-    	FILTER(strStarts(?name, '${planetName}')).
+    	FILTER(strStarts(lcase(?name), '${planetName}')).
   	}
-    FILTER(strStarts(?label, '${planetName}')).
+    FILTER(strStarts(lcase(?label), '${planetName}')).
 }
-`
+`;
   const encodedGeneralInfoQuery = buildUrlWithQuery(generalInfoQuery);
 
   //Ajax call to DBPedia
@@ -269,7 +272,7 @@ function getSatelliteInfo() {
     ?sat foaf:name ?name .
     ?planet foaf:name ?labelPlanet .
 
-    FILTER (contains(?labelPlanet,"${planetName}"))
+    FILTER (contains(lcase(?labelPlanet),"${planetName}"))
 
     }
     `
@@ -290,12 +293,13 @@ SELECT ?planet ?sat ?name
   $.ajax({
     url: encodedSatelliteQuery,
     success: function (result) {
-      if (result.results.bindings.length == 0) {
-        console.log("No satellites found for this planet")
+      if (result.results.bindings.length === 0) {
+        console.log("No satellites found for this planet");
+        document.getElementById("satellites").innerHTML = "No satellites found";
       }
       //Add data to table
       let results = result.results.bindings;
-      if (results.length != 0) {
+      if (results.length !== 0) {
         let satellites = "";
         satellites = satellites + results[0].name.value
         for (var i = 1; i < results.length; i++) {
@@ -320,10 +324,10 @@ function getDiscoveryDate() {
   ?planet dbo:discovered ?date.
   ?planet foaf:name ?label.
 
-  filter(contains(?label,"${planetName}"))
+  filter(contains(lcase(?label),"${planetName}"))
   }
   ORDER BY ASC(?date)
-  `
+  `;
   const encodedDiscoveryDateQuery = buildUrlWithQuery(discoveryDateQuery);
 
   $.ajax({

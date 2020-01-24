@@ -16,7 +16,7 @@ $(document).ready(function(){
 
 
 function autoComplete() {
-  const baseURL = 'https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
+  const baseURL = 'http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
   let slider = document.getElementById("myRange");
 
   const autoCompleteQuery = `

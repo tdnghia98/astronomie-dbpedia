@@ -36,33 +36,36 @@
   </nav>
   <br />
 
-  <div>
-    <h2>Voir les objets connus à partir d'une année</h2>
-    <div class="slidecontainer">
-      <input type="range" min="1600" max="2020" value="1800" class="slider" id="myRange">
-    </div>
-    <p>Année choisie :</p>
-    <input type="text" id="dateOutput">
-    <p>
-      Nombre d'objets connus : <div id="nbObject">0</div>
-    </p>
-  </div>
-
   <!-- Search form -->
 
   <br />
 
   <div class="container">
-    <div class="search-form">
-      <div class="md-form active-cyan active-cyan-2 mb-3">
-        <input class="form-control" type="text" placeholder="Search a planet.." aria-label="Search" name="planet-input"
-          id="planet-input" list="planetNames">
+    <div>
+      <h2>See celestial objects known from a year</h2>
+      <div class="form-group">
+          <div class="slidecontainer">
+          <input type="range" min="1600" max="2020" value="1800" class="slider" id="myRange">
+        </div>
+        <label for="dateOutput">Year</label>
+        <input type="text" id="dateOutput" class="form-control">
+        <br>
+        <p>
+          Known objects number : <div id="nbObject">0</div>
+        </p>
       </div>
+      <div class="search-form">
+        <div class="md-form active-cyan active-cyan-2 mb-3">
+          <input class="form-control" type="text" placeholder="Search a planet.." aria-label="Search" name="planet-input"
+            id="planet-input" list="planetNames">
+        </div>
+      </div>
+      <datalist id="planetNames">
+      </datalist>
+      <input type="button" class="btn btn-outline-primary" onclick="getPlanetInfo()" name="search-submit" id="getInfo"
+        value="Go!" /> <br />
+      <br />
     </div>
-    <datalist id="planetNames">
-    </datalist>
-    <input type="button" class="btn btn-outline-primary" onclick="getPlanetInfo()" name="search-submit" id="getInfo"
-      value="Go!" /> <br />
 
     <div id="planet-info-table">
       <table class="table table-hover">
