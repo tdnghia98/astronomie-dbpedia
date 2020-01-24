@@ -203,24 +203,98 @@ function getPlanetComposition() {
       }
       let atmospheres = result.results.bindings;
       let composition = "";
-      for (var i = 0; i < atmospheres.length; i++) {
-        try { // Try because DBPedia doesn't send consistent data, so type might not be present
-          if (atmospheres[i].atmosphere.type === "uri") {
-            //Parse value to get gas name
-            composition = composition + atmospheres[i].atmosphere.value.split('/').slice(-1).pop() + ", "
-          }
-        } catch (e) {
+      atmospheres = checkAtmosphere(atmospheres)
+      if (atmospheres !== false) {
+        atmospheres.forEach(function show(key, values) {
+          try { // Try because DBPedia doesn't send consistent data, so type might not be present
+            getLabelFromUri(values, function(gaz){
+              composition = composition + (composition !== '' ? ', ' : '') + gaz + (key !== '' ? ': ' + key : '');
+              document.getElementById("composition").innerHTML = composition;
+            });
+          } catch (e) {
 
-        }
-      }
-      composition = composition.substring(0, composition.length - 2);
-      document.getElementById("composition").innerHTML = composition;
-    },
+          }
+        });
+      }    },
     error: function (error) {
       console.log(error)
     }
   })
+}
 
+function checkAtmosphere(atmospheres) {
+  // remove the empty line
+  var i = 0;
+  try {
+    var nbUri = 0;
+    var nbLiteral = 0;
+    var arrayUri = [];
+    var arrayLiteral = [];
+    // Separate Uri and Literal
+    for (var i= 0; i < atmospheres.length; i++) {
+      if (atmospheres[i].hasOwnProperty('atmosphere')) {
+        if (atmospheres[i].atmosphere.type === "uri") {
+          nbUri++;
+          arrayUri.push(atmospheres[i].atmosphere.value)
+        } else if (atmospheres[i].atmosphere.type === "typed-literal"){
+          nbLiteral++;
+          arrayLiteral.push(atmospheres[i].atmosphere.value)
+        }  
+      }
+    }
+
+    // return gaz matched with litteral if there are as many uri and literal
+    var mapGaz = new Map();
+    if (nbUri>0) {
+      if (nbUri === nbLiteral){
+        for (i = 0; i < nbUri; i++) {
+          mapGaz.set(arrayUri[i], arrayLiteral[i])
+        }
+      } else {
+        for (i = 0; i < nbUri; i++) {
+          mapGaz.set(arrayUri[i], '')
+        }
+      }
+    } else {
+      return false;
+    }
+    return mapGaz;
+
+  } catch(e) {
+    return false;
+  }
+}
+
+// Function qui permet de récupérer le label depuis une valeur retournée sous forme d'uri
+function getLabelFromUri(uri, callback) {
+  var baseURL = 'https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
+  var queryParams = '&format=application%2Fsparql-results%2Bjson&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
+
+  var uriToLabelQuery = 
+  `select  ?label
+  where {
+          <${uri}> rdfs:label ?label .
+    FILTER (langMatches( lang(?label), "EN" ) )
+        } 
+  LIMIT 1`
+
+  var encodeduriToLabelQuery = baseURL + encodeURI(uriToLabelQuery) + queryParams;
+  try {
+    $.ajax({
+      url: encodeduriToLabelQuery,
+      success: function(result) {
+        if (result.results.bindings.length == 0) {
+          console.log("No results found for this planet")
+        }
+        callback.call(this, result.results.bindings[0].label.value); 
+      },
+      error: function(error) {
+        console.log(error)
+      }
+    })
+  } catch(e) {
+    console.log(e);
+  }
 }
 
 function getThumbnailImage() {
