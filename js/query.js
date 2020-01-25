@@ -30,51 +30,51 @@ function insertGeneralInfoIntoTable(result) {
   }
 
   if (fields[0].volume) {
-    volume = fields[0].volume.value;
+    volume = fields[0].volume.value+ " times the Earth's volume";
   } else {
     volume = "No volume found"
   }
 
   if (fields[0].minTemperature) {
-    minTemp = fields[0].minTemperature.value;
+    minTemp = fields[0].minTemperature.value + " K";
   } else {
     minTemp = "No minimum temperature found";
   }
 
   if (fields[0].maxTemperature) {
-    maxTemp = fields[0].maxTemperature.value;
+    maxTemp = fields[0].maxTemperature.value + " K";
   } else {
     maxTemp = "No maximum temperature found";
   }
 
   if (fields[0].moyTemperature) {
-    moyTemp = fields[0].moyTemperature.value;
+    moyTemp = fields[0].moyTemperature.value + " K";
   } else {
     moyTemp = "No mean temperature found";
   }
 
   if (fields[0].masse) {
-    mass = fields[0].masse.value;
+    mass = fields[0].masse.value + " times the Earth's mass";
   } else {
     mass = "No mass found";
   }
 
   if (fields[0].surface) {
-    surface = fields[0].surface.value;
+    surface = fields[0].surface.value+ " times the Earth's surface";
   } else {
     surface = "No surface area found";
   }
 
   if (fields[0].gravite) {
-    gravity = fields[0].gravite.value;
+    gravity = fields[0].gravite.value+ " times the Earth's gravity";
   } else {
     gravity = "No gravity information found";
   }
 
   if (fields[0].pression) {
-    pression = fields[0].pression.value;
+    pression = fields[0].pression.value+ " times the Earth's pressure";
   } else {
-    pression = "No pression info found";
+    pression = "No pressure info found";
   }
 
   document.getElementById('planet-name').innerHTML = planetName;
