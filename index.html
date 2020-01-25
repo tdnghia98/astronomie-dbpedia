@@ -7,8 +7,7 @@
   <title>Astropedia</title>
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="./style/style.css">
 
   <!-- Js -->
@@ -24,8 +23,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Astropedia</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
-      aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
@@ -42,28 +40,21 @@
 
   <div class="container">
     <div>
-      <h2>See celestial objects known from a year</h2>
+      <h2>Celestial Objects known in <span id="dateOutput"> </span>: <span id="nbObject"> </span></h2>
       <div class="form-group">
-          <div class="slidecontainer">
+        <div class="slidecontainer">
           <input type="range" min="1600" max="2020" value="1800" class="slider" id="myRange">
         </div>
-        <label for="dateOutput">Year</label>
-        <input type="text" id="dateOutput" class="form-control">
         <br>
-        <p>
-          Known objects number : <div id="nbObject">0</div>
-        </p>
       </div>
       <div class="search-form">
         <div class="md-form active-cyan active-cyan-2 mb-3">
-          <input class="form-control" type="text" placeholder="Search a planet.." aria-label="Search" name="planet-input"
-            id="planet-input" list="planetNames">
+          <input class="form-control" type="text" placeholder="Search a planet.." aria-label="Search" name="planet-input" id="planet-input" list="planetNames">
         </div>
       </div>
       <datalist id="planetNames">
       </datalist>
-      <input type="button" class="btn btn-outline-primary" onclick="getPlanetInfo()" name="search-submit" id="getInfo"
-        value="Go!" /> <br />
+      <input type="button" class="btn btn-outline-primary" onclick="getPlanetInfo()" name="search-submit" id="getInfo" value="Go!" /> <br />
       <br />
     </div>
 
@@ -126,8 +117,8 @@
 
     <div class="row">
       <div class="col">
-        <h1>Planete similaire</h1>
-        <h2>Choisir les criteres</h2>
+        <h1>Similar planets: </h1>
+        <h2>Choose your criteria</h2>
       </div>
     </div>
     <div class="row">
@@ -145,21 +136,21 @@
 
       </div>
       <div class="critere-box col">
-        <input type="checkbox" name="vitesse" id="vitesseCheckbox" checked>Vitesse <br>
+        <input type="checkbox" name="vitesse" id="vitesseCheckbox" checked>Speed <br>
         <input class="slider" type="range" name="vitesseSlider" id="vitesseSlider" min="1" max="100" value="50">
         <span class="sliderValue" id="vitesseValue"></span>
       </div>
     </div>
     <div class="row justify-content-center mt-3">
       <div class="col">
-        <button type="button" class="btn btn-primary" id="searchSimilaireBouton">Chercher</button>
+        <button type="button" class="btn btn-primary" id="searchSimilaireBouton">Search</button>
       </div>
     </div>
     <div class="row" id="resultatPlaneteSimilaire">
       <div class="col">
 
         <h1>
-          Résultat
+          Results:
         </h1>
         <table class="table table-hover" id="table-planete-similaire">
           <thead style="display: none;">
@@ -187,12 +178,12 @@
 </body>
 
 <script>
-  $(document).ready(function () {
+  $(document).ready(function() {
     autoComplete();
   })
 
   var inputPlanetName = document.getElementById("planet-input");
-  inputPlanetName.addEventListener("keyup", function (event) {
+  inputPlanetName.addEventListener("keyup", function(event) {
     event.preventDefault();
     if (event.keyCode === 13) {
       document.getElementById("getInfo").click();

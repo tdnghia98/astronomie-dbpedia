@@ -199,7 +199,7 @@ function getPlanetComposition() {
     url: encodedPlanetCompositionQuery,
     success: function (result) {
       if (result.results.bindings.length == 0) {
-        console.log("No results found for this planet")
+        console.log("No composition results found for this planet")
       }
       let atmospheres = result.results.bindings;
       let composition = "";
@@ -239,7 +239,7 @@ function checkAtmosphere(atmospheres) {
         } else if (atmospheres[i].atmosphere.type === "typed-literal"){
           nbLiteral++;
           arrayLiteral.push(atmospheres[i].atmosphere.value)
-        }  
+        }
       }
     }
 
@@ -270,12 +270,12 @@ function getLabelFromUri(uri, callback) {
   var baseURL = 'https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
   var queryParams = '&format=application%2Fsparql-results%2Bjson&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
 
-  var uriToLabelQuery = 
+  var uriToLabelQuery =
   `select  ?label
   where {
           <${uri}> rdfs:label ?label .
     FILTER (langMatches( lang(?label), "EN" ) )
-        } 
+        }
   LIMIT 1`
 
   var encodeduriToLabelQuery = baseURL + encodeURI(uriToLabelQuery) + queryParams;
@@ -286,7 +286,7 @@ function getLabelFromUri(uri, callback) {
         if (result.results.bindings.length == 0) {
           console.log("No results found for this planet")
         }
-        callback.call(this, result.results.bindings[0].label.value); 
+        callback.call(this, result.results.bindings[0].label.value);
       },
       error: function(error) {
         console.log(error)

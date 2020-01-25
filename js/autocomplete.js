@@ -1,11 +1,11 @@
-$(document).ready(function(){
+$(document).ready(function() {
   let slider = document.getElementById("myRange");
   let output = document.getElementById("dateOutput");
-  output.value = slider.value;
+  output.innerHTML = slider.value;
   autoComplete();
 
   slider.oninput = function() {
-    output.value = this.value;
+    output.innerHTML = slider.value;
     autoComplete();
   };
 
@@ -25,7 +25,7 @@ function autoComplete() {
   ?planet a dbo:Planet.
   ?planet foaf:name ?label.
   ?planet dbo:discovered ?date.
-  FILTER (?date < "`+slider.value+`-01-01"^^xsd:date)
+  FILTER (?date < "` + slider.value + `-01-01"^^xsd:date)
   }
   LIMIT 3000
   `;
