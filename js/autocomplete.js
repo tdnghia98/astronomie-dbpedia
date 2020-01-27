@@ -1,6 +1,7 @@
 $(document).ready(function() {
   let slider = document.getElementById("myRange");
   let output = document.getElementById("dateOutput");
+  let checkBoxDate = document.getElementById("enableNoDate");
   output.innerHTML = slider.value;
   autoComplete();
 
@@ -17,6 +18,10 @@ $(document).ready(function() {
   output.onchange = function() {
     slider.value = output.value;
   };
+
+  checkBoxDate.onchange = function () { // si on coche ou décoche on relance la recherche
+    autoComplete();
+  }
 });
 
 
