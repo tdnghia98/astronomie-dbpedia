@@ -86,6 +86,8 @@ function insertGeneralInfoIntoTable(result) {
   document.getElementById('surface').innerHTML = surface;
   document.getElementById('gravity').innerHTML = gravity;
   document.getElementById('pression').innerHTML = pression;
+
+  preloadSimilarPlanetsCoeff(fields);
 }
 
 function emptyTable() {
@@ -111,6 +113,8 @@ function buildUrlWithQuery(query) {
 }
 
 function getPlanetInfo() {
+  disableSimilarPlanetInterface();
+  resetSimilarPlanetInterface();
   emptyTable();
   getPlanetGeneralInfo();
   getPlanetComposition();
