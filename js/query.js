@@ -21,6 +21,7 @@ function insertGeneralInfoIntoTable(result) {
   let surface = "";
   let gravity = "";
   let pression = "";
+  let abstract = "";
 
   // [0] => Accept only the first result?
   if (fields[0].name) {
@@ -76,12 +77,18 @@ function insertGeneralInfoIntoTable(result) {
   } else {
     pression = "No pressure info found";
   }
+  if (fields[0].abstract) {
+    abstract = fields[0].abstract.value;
+  } else {
+    abstract = "No abstract found";
+  }
 
   document.getElementById('planet-name').innerHTML = planetName;
-  document.getElementById('volume').innerHTML = volume
-  document.getElementById('min-temp').innerHTML = minTemp
+  document.getElementById('abstract').innerHTML = abstract;
+  document.getElementById('volume').innerHTML = volume;
+  document.getElementById('min-temp').innerHTML = minTemp;
   document.getElementById('max-temp').innerHTML = maxTemp;
-  document.getElementById('moy-temp').innerHTML = moyTemp
+  document.getElementById('moy-temp').innerHTML = moyTemp;
   document.getElementById('mass').innerHTML = mass;
   document.getElementById('surface').innerHTML = surface;
   document.getElementById('gravity').innerHTML = gravity;
@@ -123,7 +130,7 @@ function getPlanetGeneralInfo() {
   const planetName = parsePlanetName();
 
   const generalInfoQuery = `
-  SELECT DISTINCT ?name ?volume AVG(?minTemp) AS ?minTemperature AVG(?maxTemp) AS ?maxTemperature AVG(?moyTemp) AS ?moyTemperature ?masse ?speed ?surface ?gravite ?pression WHERE {
+  SELECT DISTINCT ?name ?volume AVG(?minTemp) AS ?minTemperature AVG(?maxTemp) AS ?maxTemperature AVG(?moyTemp) AS ?moyTemperature ?masse ?speed ?surface ?gravite ?pression ?abstract WHERE {
   	?planet a dbo:Planet;
    	rdfs:label ?label.
     OPTIONAL {
@@ -153,11 +160,15 @@ function getPlanetGeneralInfo() {
   	OPTIONAL {
     	?planet dbp:surfacePressure ?pression.
   	}
+    OPTIONAL {
+    	?planet dbo:abstract ?abstract.
+  	}
   	OPTIONAL {
     	?planet foaf:name ?name.
     	FILTER(strStarts(lcase(?name), '${planetName}')).
   	}
     FILTER(strStarts(lcase(?label), '${planetName}')).
+    FILTER (langMatches( lang(?abstract), "EN" ) )
 }
 `;
   const encodedGeneralInfoQuery = buildUrlWithQuery(generalInfoQuery);
