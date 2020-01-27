@@ -418,12 +418,13 @@ function getDiscoveryDate() {
   $.ajax({
     url: encodedDiscoveryDateQuery,
     success: function (result) {
-      //surround with try catch
       let date = "No discovery date information found for this planet";
-      if (result.results.bindings[0].date.value) {
-        date = result.results.bindings[0].date.value
+      if (result.results.length > 0){
+        if (result.results.bindings[0].date.value) {
+          date = result.results.bindings[0].date.value
+        }
+        document.getElementById("discovery-date").innerHTML = date;
       }
-      document.getElementById("discovery-date").innerHTML = date
     },
     error: function (error) {
       console.log(error)
