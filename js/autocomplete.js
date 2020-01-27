@@ -5,7 +5,12 @@ $(document).ready(function() {
   autoComplete();
 
   slider.oninput = function() {
+    // modification de la date a chaque deplacement de slider
     output.innerHTML = slider.value;
+  };
+
+  slider.onmouseup = function() {
+    // recherche des planètes quand le slider est fixé (sinon trop lent)
     autoComplete();
   };
 
@@ -17,18 +22,38 @@ $(document).ready(function() {
 
 function autoComplete() {
   const baseURL = 'http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
+  let autoCompleteQuery;
   let slider = document.getElementById("myRange");
 
-  const autoCompleteQuery = `
-  SELECT DISTINCT ?planet ?label
-  WHERE {
-  ?planet a dbo:Planet.
-  ?planet foaf:name ?label.
-  ?planet dbo:discovered ?date.
-  FILTER (?date < "` + slider.value + `-01-01"^^xsd:date)
+  let enableNoDate = document.getElementById("enableNoDate").checked;
+
+  if (enableNoDate){ // toutes les planètes sont recherchées
+    console.log("tout");
+    autoCompleteQuery = `
+      SELECT DISTINCT ?label
+      WHERE {
+      ?planet a dbo:Planet.
+      ?planet foaf:name ?label.
+      OPTIONAL{
+        ?planet dbo:discovered ?date.
+        FILTER (?date < "` + slider.value + `-01-01"^^xsd:date)
+      }
+      }
+      `;
   }
-  LIMIT 3000
-  `;
+  else{ // seules les planetes ayant des dates sont recherchées
+    autoCompleteQuery = `
+      SELECT DISTINCT ?label
+      WHERE {
+      ?planet a dbo:Planet.
+      ?planet foaf:name ?label.
+      ?planet dbo:discovered ?date.
+      FILTER (?date < "` + slider.value + `-01-01"^^xsd:date)
+      }
+      LIMIT 3000
+      `;
+  }
+
   const queryParams = '&format=application%2Fsparql-results%2Bjson&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
   const encodedAutoCompleteQuery = baseURL + encodeURI(autoCompleteQuery) + queryParams;
 
@@ -48,6 +73,8 @@ function autoComplete() {
         return 0;
       });
 
+      document.getElementById('nbObject').innerHTML = planets.length;
+
       document.getElementById("planetNames").innerHTML = ""; // remove previous planets/children
 
       for (let i = 0; i < planetNames.length; i++) {
@@ -56,11 +83,9 @@ function autoComplete() {
         node.appendChild(textnode);
         document.getElementById("planetNames").appendChild(node);
       }
-
-      document.getElementById('nbObject').innerHTML = planets.length;
     },
     error: function(error) {
-      console.log("Error during autoComplete: ")
+      console.log("Error during autoComplete: ");
       console.log(error)
     }
   })
