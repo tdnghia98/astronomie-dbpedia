@@ -180,6 +180,7 @@ function getPlanetGeneralInfo() {
     	FILTER(strStarts(lcase(?name), '${planetName}')).
   	}
     FILTER(strStarts(lcase(?label), '${planetName}')).
+    FILTER(strEnds(lcase(?label), '${planetName}')).
 }
 `;
   const encodedGeneralInfoQuery = buildUrlWithQuery(generalInfoQuery);
