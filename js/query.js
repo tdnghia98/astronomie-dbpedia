@@ -379,15 +379,15 @@ function getSatelliteInfo() {
     var satelliteQuery;
     if (planetName != 'Earth') {
         satelliteQuery = `
-    SELECT ?planet ?labelPlanet ?sat ?name
+    SELECT DISTINCT ?name
     WHERE {
 
     ?sat dbp:satelliteOf ?planet .
-    ?sat foaf:name ?name .
-    ?planet foaf:name ?labelPlanet .
+    ?sat rdfs:label ?name .
+    ?planet rdfs:label ?labelPlanet .
 
     FILTER (contains(lcase(?labelPlanet),"${planetName}"))
-
+    FILTER (langMatches(lang(?name),"en"))
     }
     `;
     } else {
@@ -395,7 +395,7 @@ function getSatelliteInfo() {
 SELECT ?planet ?sat ?name
  WHERE
    { ?sat dbp:satelliteOf ?planet .
-     ?sat foaf:name ?name .
+     ?sat rdfs:label ?name .
        FILTER ( contains(str(?planet), 'Earth') ).
        FILTER ( datatype(?planet) = rdf:langString ).
   }
