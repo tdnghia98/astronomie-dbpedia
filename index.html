@@ -71,6 +71,18 @@
       <br />
     </div>
 
+    <div class="container mb-3">
+      <div class="row">
+        <div class="col-4">
+          <img id="thumbnail" width=300 />
+        </div>
+        <div class="col-8">
+          <div id="abstract">
+
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="planet-info-table">
       <table class="table table-hover">
 
@@ -79,10 +91,6 @@
           <tr id="planet-name-row">
             <td>Planet name: </td>
             <td id="planet-name"></td>
-          </tr>
-          <tr id="planet-abstract">
-            <td>Abstract</td>
-            <td id="abstract"></td>
           </tr>
           <tr id="planet-volume-row">
             <td>Volume: </td>
@@ -132,10 +140,6 @@
             <td>Discovery date</td>
             <td id="discovery-date"></td>
           </tr>
-          <tr id="planet-speed">
-            <td>Speed</td>
-            <td id="speed"></td>
-          </tr>
         </tbody>
       </table>
     </div>
@@ -148,7 +152,7 @@
     </div>
     <div class="row">
       <div class="critere-box col">
-        <input type="checkbox" name="volume" id="volumeCheckbox" class="similarCb">Volume <br />
+        <input type="checkbox" name="volume" id="volumeCheckbox" class="similarCb"> Volume <br />
         <input class="slider similarSlider" type="range" name="volumeSlider" id="volumeSlider" min="1" max="100"
           value="50">
 
@@ -156,14 +160,14 @@
 
       </div>
       <div class="critere-box col">
-        <input type="checkbox" name="temperature" id="temperatureCheckbox" class="similarCb">Temperature <br>
+        <input type="checkbox" name="temperature" id="temperatureCheckbox" class="similarCb"> Temperature <br>
         <input class="slider similarSlider" type="range" name="temperatureSlider" id="temperatureSlider" min="1"
           max="100" value="50">
         <span class="sliderValue" id="temperatureValue"></span>
 
       </div>
       <div class="critere-box col">
-        <input type="checkbox" name="vitesse" id="vitesseCheckbox" class="similarCb">Speed <br>
+        <input type="checkbox" name="vitesse" id="vitesseCheckbox" class="similarCb"> Speed <br>
         <input class="slider similarSlider" type="range" name="vitesseSlider" id="vitesseSlider" min="1" max="100"
           value="50">
         <span class="sliderValue" id="vitesseValue"></span>
