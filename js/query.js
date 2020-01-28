@@ -112,13 +112,18 @@ function insertGeneralInfoIntoTable(result) {
 }
 
 function emptyTable() {
-    $(
-        '#planet-info-table tbody tr td:nth-child(2)'
-    ).innerHTML = `<div class="spinner-border text-primary" role="status">
-  <span class="sr-only">Loading...</span>
-</div>`;
     $('#thumbnail').attr('src', '');
-    $('#abstract').innerHTML = '';
+    document.getElementById('planet-name').innerHTML = "";
+    document.getElementById('abstract').innerHTML = "";
+    document.getElementById('volume').innerHTML = "";
+    document.getElementById('min-temp').innerHTML = "";
+    document.getElementById('max-temp').innerHTML = "";
+    document.getElementById('moy-temp').innerHTML = "";
+    document.getElementById('mass').innerHTML = "";
+    document.getElementById('surface').innerHTML = "";
+    document.getElementById('gravity').innerHTML = "";
+    document.getElementById('pression').innerHTML = "";
+    document.getElementById('speed').innerHTML = "";
 }
 
 //Helper function to build query
@@ -343,12 +348,12 @@ function getLabelFromUri(uri, callback) {
 
 
 function getThumbnailImage() {
-	
+
 	let planetName = parsePlanetName();
 	planetName = planetName.charAt(0).toUpperCase() + planetName.slice(1);
 
 	const encodedThumbnailQuery = "https://query.wikidata.org/sparql?query=SELECT%20%3Fplanet%20%3FplanetLabel%20%3Fimage%20%3Flieu%20%3FlieuLabel%20WHERE%20%7B%0A%20%20%3Fplanet%20wdt%3AP18%20%3Fimage%3B%0A%20%20%20%20rdfs%3Alabel%20%3FplanetLabel%3B%0A%20%20%20%20wdt%3AP276%20wd%3AQ7879772.%0A%20%20FILTER(STRSTARTS(%3FplanetLabel%2C%20%22" + planetName + "%22))%0A%7D&format=json";
-  
+
 	//Ajax call to DBPedia
 	$.ajax({
 	  url: encodedThumbnailQuery,
