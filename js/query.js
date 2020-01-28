@@ -326,6 +326,7 @@ function getLabelFromUri(uri, callback) {
 }
 
 function getThumbnailImage() {
+	
 	let planetName = parsePlanetName();
 	planetName = planetName.charAt(0).toUpperCase() + planetName.slice(1);
 
@@ -337,10 +338,13 @@ function getThumbnailImage() {
 	  success: function(result) {
 		if (result.results.bindings.length == 0) {
 		  console.log("No thumbnail found for this planet")
+		  document.getElementById("thumbnail").src = 'img/planetnotfound'+Math.ceil(Math.random()*7)+'.png';
 		}
-		console.log(result)
-		console.log(result.results.bindings[0].image.value);
-		$('#thumbnail').attr('src', result.results.bindings[0].image.value)
+		else{
+			console.log(result)
+			console.log(result.results.bindings[0].image.value);
+			$('#thumbnail').attr('src', result.results.bindings[0].image.value)
+		}
 	  },
 	  error: function(error) {
 		console.log(error)
