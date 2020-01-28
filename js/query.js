@@ -382,6 +382,8 @@ SELECT ?planet ?sat ?name
   $.ajax({
     url: encodedSatelliteQuery,
     success: function (result) {
+      console.log("result");
+      console.log(result);
       if (result.results.bindings.length === 0) {
         console.log("No satellites found for this planet");
         document.getElementById("satellites").innerHTML = "No satellites found";
@@ -389,12 +391,22 @@ SELECT ?planet ?sat ?name
       //Add data to table
       let results = result.results.bindings;
       if (results.length !== 0) {
-        let satellites = "";
-        satellites = satellites + results[0].name.value
-        for (var i = 1; i < results.length; i++) {
-          satellites = satellites + ", " + results[i].name.value;
+        for (var i = 0; i < results.length; i++) {
+          let satelliteName = results[i].name.value;
+          var nodeSat = $("<span> <b>"+satelliteName+"</b><br> </span>");
+
+          nodeSat.click(function(){
+            console.log("Redirection vers " + satelliteName);
+            $('#planet-input').val(satelliteName);
+            getPlanetInfo();
+            window.scrollTo(0,0);
+          });
+
+
+         $("#satellites").append(nodeSat);
+
         }
-        document.getElementById("satellites").innerHTML = satellites;
+        //document.getElementById("satellites").innerHTML = satellites;
       }
     },
     error: function (error) {
