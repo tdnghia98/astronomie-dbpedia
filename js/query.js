@@ -54,7 +54,7 @@ function insertGeneralInfoIntoTable(result) {
     moyTemp = "No mean temperature found";
   }
 
-  if (fields[0].masse) {
+  if (fields[0].masse && fields[0].masse.length > 0) {
     mass = fields[0].masse.value + " times the Earth's mass";
   } else {
     mass = "No mass found";
