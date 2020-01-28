@@ -78,7 +78,7 @@ function insertGeneralInfoIntoTable(result) {
     pression = "No pressure info found";
   }
   if (fields[0].abstract) {
-    abstract = fields[0].abstract.value;
+    abstract = fields[0].abstract.value.substr(0, 800);
   } else {
     abstract = "No abstract found";
   }
@@ -98,16 +98,11 @@ function insertGeneralInfoIntoTable(result) {
 }
 
 function emptyTable() {
-  document.getElementById('planet-name').innerHTML = "";
-  document.getElementById('volume').innerHTML = ""
-  document.getElementById('min-temp').innerHTML = ""
-  document.getElementById('max-temp').innerHTML = "";
-  document.getElementById('moy-temp').innerHTML = ""
-  document.getElementById('mass').innerHTML = "";
-  document.getElementById('surface').innerHTML = "";
-  document.getElementById('gravity').innerHTML = "";
-  document.getElementById('pression').innerHTML = "";
-  document.getElementById("satellites").innerHTML = "";
+  $('#planet-info-table tbody tr td:nth-child(2)').innerHTML = `<div class="spinner-border text-primary" role="status">
+  <span class="sr-only">Loading...</span>
+</div>`;
+  $('#thumbnail').attr('src', '');
+  $('#abstract').innerHTML = '';
 }
 
 //Helper function to build query
@@ -313,41 +308,27 @@ function getLabelFromUri(uri, callback) {
 }
 
 function getThumbnailImage() {
-  const planetName = parsePlanetName();
-  const thumbnailQuery = `
-  SELECT ?name ?thumbnail WHERE {
-  {
-    ?planet rdf:type dbo:Planet ;
-    dbo:thumbnail ?thumbnail ;
-    rdfs:label ?name .
-  }
-  UNION
-  {
-    ?planet rdf:type dbo:Star ;
-    dbo:thumbnail ?thumbnail ;
-    rdfs:label ?name .
-  }
-  FILTER (langMatches(lang(?name), "EN"))
-  FILTER (contains(?name, "${planetName}"))
-}`
+	let planetName = parsePlanetName();
+	planetName = planetName.charAt(0).toUpperCase() + planetName.slice(1);
 
-  const encodedThumbnailQuery = buildUrlWithQuery(thumbnailQuery);
-  /*
-    //Ajax call to DBPedia
-    $.ajax({
-      url: encodedThumbnailQuery,
-      success: function(result) {
-        if (result.results.bindings.length == 0) {
-          console.log("No thumbnail found for this planet")
-        }
-        console.log(result)
-      },
-      error: function(error) {
-        console.log(error)
-      }
-    })
-  */
-}
+	const encodedThumbnailQuery = "https://query.wikidata.org/sparql?query=SELECT%20%3Fplanet%20%3FplanetLabel%20%3Fimage%20%3Flieu%20%3FlieuLabel%20WHERE%20%7B%0A%20%20%3Fplanet%20wdt%3AP18%20%3Fimage%3B%0A%20%20%20%20rdfs%3Alabel%20%3FplanetLabel%3B%0A%20%20%20%20wdt%3AP276%20wd%3AQ7879772.%0A%20%20FILTER(STRSTARTS(%3FplanetLabel%2C%20%22" + planetName + "%22))%0A%7D&format=json";
+  
+	//Ajax call to DBPedia
+	$.ajax({
+	  url: encodedThumbnailQuery,
+	  success: function(result) {
+		if (result.results.bindings.length == 0) {
+		  console.log("No thumbnail found for this planet")
+		}
+		console.log(result)
+		console.log(result.results.bindings[0].image.value);
+		$('#thumbnail').attr('src', result.results.bindings[0].image.value)
+	  },
+	  error: function(error) {
+		console.log(error)
+	  }
+	})
+  }
 
 function getSatelliteInfo() {
   const planetName = parsePlanetName();
