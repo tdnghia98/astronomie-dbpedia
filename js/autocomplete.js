@@ -26,6 +26,7 @@ $(document).ready(function() {
 });
 
 function autoComplete() {
+    $('#select2-planet-names').empty();
     const baseURL =
         'http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
     let autoCompleteQuery;
@@ -101,6 +102,7 @@ function autoComplete() {
                 document
                     .getElementById('select2-planet-names')
                     .appendChild(node);
+                console.log(planetNames[i]);
             }
         },
         error: function(error) {
