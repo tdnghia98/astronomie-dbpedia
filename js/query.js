@@ -423,7 +423,8 @@ SELECT ?planet ?sat ?name
 
           nodeSat.click(function(){
             console.log("Redirection vers " + satelliteName);
-            $('#planet-input').val(satelliteName);
+            $('#select2-planet-names').val(satelliteName);
+            $('#select2-planet-names').trigger('change');
             getPlanetInfo();
             window.scrollTo(0,0);
           });

@@ -18,6 +18,7 @@ function getPlaneteSimilaire() {
         $.ajax({
             url: encodedPlaneteSimilaireQuery,
             success: result => {
+                emptySimilarPlanetTab();
                 if (result.results.bindings.length == 0) {
                     console.log('No similar planets found for this criteria');
                 }
@@ -54,7 +55,8 @@ function completerTablePlaneteSimilaire(results) {
             var newSimilarPlanet = $("<tr><td>"+planetName+"</td></tr>");
             newSimilarPlanet.click(function() {
                 console.log("Redirection vers " + planetName);
-                $('#planet-input').val(planetName);
+                $('#select2-planet-names').val(planetName);
+                $('#select2-planet-names').trigger('change');
                 getPlanetInfo();
                 window.scrollTo(0,0);
             })
@@ -143,12 +145,18 @@ let construireRequete = function () {
 
 let preloadSimilarPlanetsCoeff =  function (planeteInfos) {
 
+    let runResearch = false;
+
     if (planeteInfos[0].volume) {
         let planeteVolume = planeteInfos[0].volume.value;
 
         if (planeteVolume) {
             $("#volumeCheckbox").removeAttr("disabled");
             $("#volumeSlider").removeAttr("disabled");
+
+            $("#volumeCheckbox").prop("checked",true);
+
+            runResearch = true;
         }
     }
 
@@ -159,6 +167,10 @@ let preloadSimilarPlanetsCoeff =  function (planeteInfos) {
             console.log("Enabling temperature criteria");
             $("#temperatureCheckbox").removeAttr("disabled");
             $("#temperatureSlider").removeAttr("disabled");
+
+            $("#temperatureCheckbox").prop("checked",true);
+
+            runResearch = true;
         }
     }
 
@@ -169,8 +181,17 @@ let preloadSimilarPlanetsCoeff =  function (planeteInfos) {
         if (planeteVitess) {
             $("#vitesseCheckbox").removeAttr("disabled");
             $("#vitesseSlider").removeAttr("disabled");
+
+            $("#vitesseCheckbox").prop("checked",true);
+
+            runResearch = true;
         }
     }
+
+    if (runResearch) {
+        onChercherPlaneteSimilaire();
+    }
+
 
 };
 

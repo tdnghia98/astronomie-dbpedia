@@ -26,7 +26,6 @@ $(document).ready(function() {
 });
 
 function autoComplete() {
-    $('#select2-planet-names').empty();
     const baseURL =
         'http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=';
     let autoCompleteQuery;
@@ -77,6 +76,7 @@ function autoComplete() {
         dataType: 'jsonp',
         url: encodedAutoCompleteQuery,
         success: function(result) {
+            $('#select2-planet-names').empty();
             let planets = result.results.bindings;
             var planetNames = [];
             for (let i = 0; i < planets.length; i++) {
