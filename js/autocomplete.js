@@ -102,7 +102,7 @@ function autoComplete() {
                 document
                     .getElementById('select2-planet-names')
                     .appendChild(node);
-                console.log(planetNames[i]);
+                //console.log(planetNames[i]);
             }
         },
         error: function(error) {
