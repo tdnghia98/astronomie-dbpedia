@@ -1,16 +1,15 @@
-let sliderFunction = function (sliderID, sliderValueInputID) {
+let sliderFunction = function(sliderID, sliderValueInputID) {
     sliderValue = $(`#${sliderID}`).val() + '%';
     $(`#${sliderValueInputID}`).html(sliderValue);
-    $(`#${sliderID}`).on('change input', function () {
+    $(`#${sliderID}`).on('change input', function() {
         sliderValue = $(`#${sliderID}`).val() + '%';
         $(`#${sliderValueInputID}`).html(sliderValue);
     });
 };
 
-
 function getPlaneteSimilaire() {
     emptySimilarPlanetTab();
-    $("#resultatPlaneteSimilaire").show();
+    $('#resultatPlaneteSimilaire').show();
     let query = construireRequete();
     if (query) {
         const encodedPlaneteSimilaireQuery = buildUrlWithQuery(query);
@@ -29,10 +28,9 @@ function getPlaneteSimilaire() {
         });
         return results;
     }
-
 }
 
-$(function () {
+$(function() {
     sliderFunction('volumeSlider', 'volumeValue');
     sliderFunction('temperatureSlider', 'temperatureValue');
     sliderFunction('vitesseSlider', 'vitesseValue');
@@ -43,7 +41,6 @@ $(function () {
 let onChercherPlaneteSimilaire = () => {
     $('#table-planete-similaire>thead').show();
     getPlaneteSimilaire();
-
 };
 
 function completerTablePlaneteSimilaire(results) {
@@ -51,40 +48,38 @@ function completerTablePlaneteSimilaire(results) {
     for (let planet of results) {
         const planetName = planet.planetName.value;
         console.log(planetName);
-        if (!planetName.includes($("#planet-name").text())) {
-            var newSimilarPlanet = $("<tr><td>"+planetName+"</td></tr>");
+        if (!planetName.includes($('#planet-name').text())) {
+            var newSimilarPlanet = $('<tr><td>' + planetName + '</td></tr>');
             newSimilarPlanet.click(function() {
-                console.log("Redirection vers " + planetName);
+                console.log('Redirection vers ' + planetName);
                 $('#select2-planet-names').val(planetName);
                 $('#select2-planet-names').trigger('change');
                 getPlanetInfo();
-                window.scrollTo(0,0);
-            })
+                window.scrollTo(0, 0);
+            });
             console.log(newSimilarPlanet);
             $('#similar-planet-tbody').append(newSimilarPlanet);
         }
-
-
     }
 }
 
-let construireRequete = function () {
+let construireRequete = function() {
     let volumeSliderValue = $('#volumeSlider').val() / 100;
     let temperatureSliderValue = $('#temperatureSlider').val() / 100;
     let vitesseSliderValue = $('#vitesseSlider').val() / 100;
 
     let planeteVolume = $('#volume').text();
     let planeteTemperature = $('#moy-temp').text();
-    let planeteVitess =  $('#speed').text();
+    let planeteVitess = $('#speed').text();
     let select = `?planetName`;
     let filter = `FILTER(LANGMATCHES(LANG(?planetName), "EN")).`;
     let predicates = ``;
 
     if ($('#volumeCheckbox').is(':checked')) {
         if (planeteVolume && !planeteVolume.includes('No')) {
-            planeteVolume = planeteVolume.split(" ")[0];
+            planeteVolume = planeteVolume.split(' ')[0];
             select += `?planetVolume 
-            `
+            `;
             predicates += `
         ?planet dbo:volume ?planetVolume.`;
             filter += ` 
@@ -96,7 +91,7 @@ let construireRequete = function () {
 
     if ($('#temperatureCheckbox').is(':checked')) {
         if (planeteTemperature && !planeteTemperature.includes('No')) {
-            planeteTemperature = planeteTemperature.split(" ")[0];
+            planeteTemperature = planeteTemperature.split(' ')[0];
             select += `(AVG(?planetTemp) as ?temp)
             `;
             predicates += `
@@ -110,7 +105,7 @@ let construireRequete = function () {
 
     if ($('#vitesseCheckbox').is(':checked')) {
         if (planeteVitess && !planeteVitess.includes('No')) {
-            planeteVitess = planeteVitess.split(" ")[0];
+            planeteVitess = planeteVitess.split(' ')[0];
             select += `?planetVitesse
             `;
             predicates += `
@@ -123,7 +118,6 @@ let construireRequete = function () {
     }
 
     if (predicates) {
-
         let requete = `
             PREFIX dboPlanet: <http://dbpedia.org/ontology/Planet/>
           
@@ -131,7 +125,7 @@ let construireRequete = function () {
             ${select}
             WHERE {
             ?planet rdf:type dbo:Planet;
-            foaf:name ?planetName.
+            rdfs:label ?planetName.
             ${predicates}
             ${filter}}`;
         return requete;
@@ -139,22 +133,19 @@ let construireRequete = function () {
         console.log('No predicate');
         return null;
     }
-
-
 };
 
-let preloadSimilarPlanetsCoeff =  function (planeteInfos) {
-
+let preloadSimilarPlanetsCoeff = function(planeteInfos) {
     let runResearch = false;
 
     if (planeteInfos[0].volume) {
         let planeteVolume = planeteInfos[0].volume.value;
 
         if (planeteVolume) {
-            $("#volumeCheckbox").removeAttr("disabled");
-            $("#volumeSlider").removeAttr("disabled");
+            $('#volumeCheckbox').removeAttr('disabled');
+            $('#volumeSlider').removeAttr('disabled');
 
-            $("#volumeCheckbox").prop("checked",true);
+            $('#volumeCheckbox').prop('checked', true);
 
             runResearch = true;
         }
@@ -164,25 +155,24 @@ let preloadSimilarPlanetsCoeff =  function (planeteInfos) {
         let planeteTemperature = planeteInfos[0].moyTemperature.value;
 
         if (planeteTemperature) {
-            console.log("Enabling temperature criteria");
-            $("#temperatureCheckbox").removeAttr("disabled");
-            $("#temperatureSlider").removeAttr("disabled");
+            console.log('Enabling temperature criteria');
+            $('#temperatureCheckbox').removeAttr('disabled');
+            $('#temperatureSlider').removeAttr('disabled');
 
-            $("#temperatureCheckbox").prop("checked",true);
+            $('#temperatureCheckbox').prop('checked', true);
 
             runResearch = true;
         }
     }
 
     if (planeteInfos[0].speed) {
-
         let planeteVitess = planeteInfos[0].speed.value;
 
         if (planeteVitess) {
-            $("#vitesseCheckbox").removeAttr("disabled");
-            $("#vitesseSlider").removeAttr("disabled");
+            $('#vitesseCheckbox').removeAttr('disabled');
+            $('#vitesseSlider').removeAttr('disabled');
 
-            $("#vitesseCheckbox").prop("checked",true);
+            $('#vitesseCheckbox').prop('checked', true);
 
             runResearch = true;
         }
@@ -191,23 +181,21 @@ let preloadSimilarPlanetsCoeff =  function (planeteInfos) {
     if (runResearch) {
         onChercherPlaneteSimilaire();
     }
-
-
 };
 
 function disableSimilarPlanetInterface() {
-    $(".similarCb").attr("disabled",true);
-    $(".similarSlider").attr("disabled", true);
+    $('.similarCb').attr('disabled', true);
+    $('.similarSlider').attr('disabled', true);
 }
 
 function resetSimilarPlanetInterface() {
-    $("#resultatPlaneteSimilaire").hide();
+    $('#resultatPlaneteSimilaire').hide();
     emptySimilarPlanetTab();
-    $(".similarCb").prop("checked",false);
-    $(".similarSlider").val(50);
-    $(".sliderValue").html("50%");
+    $('.similarCb').prop('checked', false);
+    $('.similarSlider').val(50);
+    $('.sliderValue').html('50%');
 }
 
 function emptySimilarPlanetTab() {
-    $("#similar-planet-tbody").html("");
+    $('#similar-planet-tbody').html('');
 }
