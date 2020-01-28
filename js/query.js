@@ -399,40 +399,37 @@ SELECT ?planet ?sat ?name
 
     const encodedSatelliteQuery = buildUrlWithQuery(satelliteQuery);
 
-    $.ajax({
-        url: encodedSatelliteQuery,
-        success: function(result) {
-            console.log('result');
-            console.log(result);
-            if (result.results.bindings.length === 0) {
-                console.log('No satellites found for this planet');
-                document.getElementById('satellites').innerHTML =
-                    'No satellites found';
-            }
-            //Add data to table
-            let results = result.results.bindings;
-            if (results.length !== 0) {
-                for (var i = 0; i < results.length; i++) {
-                    let satelliteName = results[i].name.value;
-                    var nodeSat = $(
-                        '<span> <b>' + satelliteName + '</b><br> </span>'
-                    );
+  $.ajax({
+    url: encodedSatelliteQuery,
+    success: function (result) {
+      console.log("result");
+      console.log(result);
+      if (result.results.bindings.length === 0) {
+        console.log("No satellites found for this planet");
+        document.getElementById("satellites").innerHTML = "No satellites found";
+      }
+      //Add data to table
+      let results = result.results.bindings;
+      if (results.length !== 0) {
+        document.getElementById("satellites").innerHTML = "";
+        for (var i = 0; i < results.length; i++) {
+          let satelliteName = results[i].name.value;
+          var nodeSat = $("<span> <b>"+satelliteName+"</b><br> </span>");
 
-                    nodeSat.click(function() {
-                        console.log('Redirection vers ' + satelliteName);
-                        $('#planet-input').val(satelliteName);
-                        getPlanetInfo();
-                        window.scrollTo(0, 0);
-                    });
+          nodeSat.click(function(){
+            console.log("Redirection vers " + satelliteName);
+            $('#planet-input').val(satelliteName);
+            getPlanetInfo();
+            window.scrollTo(0,0);
+          });
 
-                    $('#satellites').append(nodeSat);
-                }
-                //document.getElementById("satellites").innerHTML = satellites;
-            }
-        },
-        error: function(error) {
-            console.log(error);
+         $("#satellites").append(nodeSat);
         }
+      }
+    },
+    error: function(error) {
+        console.log(error);
+    }
     });
 }
 

@@ -73,7 +73,7 @@
     overflow: hidden;
 }
 
-#similar-planet-tbody tr td {
+#similar-planet-tbody tr td, #satellites span{
     cursor: pointer;
 }
 
