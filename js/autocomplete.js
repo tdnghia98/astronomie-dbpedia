@@ -42,7 +42,8 @@ function autoComplete() {
       SELECT DISTINCT ?label
       WHERE {
       ?planet a dbo:Planet.
-      ?planet foaf:name ?label.
+      ?planet rdfs:label ?label.
+      FILTER (langMatches( lang(?label), "EN" ) ).
       OPTIONAL{
         ?planet dbo:discovered ?date.
         FILTER (?date < "` +
@@ -57,10 +58,11 @@ function autoComplete() {
             `
       SELECT DISTINCT ?label
       WHERE {
-      ?planet a dbo:Planet.
-      ?planet foaf:name ?label.
-      ?planet dbo:discovered ?date.
-      FILTER (?date < "` +
+        ?planet a dbo:Planet.
+        ?planet rdfs:label ?label.
+        ?planet dbo:discovered ?date.
+        FILTER (langMatches( lang(?label), "EN" ) ).
+        FILTER (?date < "` +
             slider.value +
             `-01-01"^^xsd:date)
       }
