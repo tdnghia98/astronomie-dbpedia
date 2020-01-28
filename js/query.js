@@ -10,7 +10,6 @@ function parsePlanetName() {
 
 //Helper function to insert the results in a table format
 function insertGeneralInfoIntoTable(result) {
-  console.log(result);
   let table = document.getElementById("planet-info-table")
   let fields = result.results.bindings;
   let planetName = "";
@@ -82,6 +81,11 @@ function insertGeneralInfoIntoTable(result) {
     abstract = fields[0].abstract.value;
   } else {
     abstract = "No abstract found";
+  }
+  if (fields[0].speed) {
+    speed = fields[0].speed.value + " km/h";
+  } else {
+    speed = "No speed found";
   }
 
   if (fields[0].speed) {
@@ -203,7 +207,8 @@ function getPlanetGeneralInfo() {
 }
 
 function getPlanetComposition() {
-  const planetName = parsePlanetName();
+  let planetName = parsePlanetName();
+  planetName = planetName.charAt(0).toUpperCase() + planetName.slice(1);
   const planetCompositionQuery = `
   SELECT DISTINCT ?atmosphere WHERE {
   	?planet a dbo:Planet;
@@ -233,6 +238,7 @@ function getPlanetComposition() {
         atmospheres.forEach(function show(key, values) {
           try { // Try because DBPedia doesn't send consistent data, so type might not be present
             getLabelFromUri(values, function(gaz){
+              key = key.substr(2, key.length);
               composition = composition + (composition !== '' ? ', ' : '') + gaz + (key !== '' ? ': ' + key : '');
               document.getElementById("composition").innerHTML = composition;
             });
@@ -240,7 +246,10 @@ function getPlanetComposition() {
 
           }
         });
-      }    },
+      }
+    else {
+      document.getElementById("composition").innerHTML = "No composition info found";
+    }    },
     error: function (error) {
       console.log(error)
     }
@@ -432,13 +441,14 @@ function getDiscoveryDate() {
   $.ajax({
     url: encodedDiscoveryDateQuery,
     success: function (result) {
+      console.log(result)
       let date = "No discovery date information found for this planet";
-      if (result.results.length > 0){
+      if (result.results.bindings.length > 0){
         if (result.results.bindings[0].date.value) {
           date = result.results.bindings[0].date.value
         }
-        document.getElementById("discovery-date").innerHTML = date;
       }
+      document.getElementById("discovery-date").innerHTML = date;
     },
     error: function (error) {
       console.log(error)
