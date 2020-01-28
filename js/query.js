@@ -173,13 +173,13 @@ function getPlanetGeneralInfo() {
   	}
     OPTIONAL {
     	?planet dbo:abstract ?abstract.
+      FILTER (langMatches( lang(?abstract), "EN" ) ).
   	}
   	OPTIONAL {
     	?planet foaf:name ?name.
     	FILTER(strStarts(lcase(?name), '${planetName}')).
   	}
     FILTER(strStarts(lcase(?label), '${planetName}')).
-    FILTER (langMatches( lang(?abstract), "EN" ) )
 }
 `;
   const encodedGeneralInfoQuery = buildUrlWithQuery(generalInfoQuery);
@@ -330,7 +330,7 @@ function getThumbnailImage() {
 	planetName = planetName.charAt(0).toUpperCase() + planetName.slice(1);
 
 	const encodedThumbnailQuery = "https://query.wikidata.org/sparql?query=SELECT%20%3Fplanet%20%3FplanetLabel%20%3Fimage%20%3Flieu%20%3FlieuLabel%20WHERE%20%7B%0A%20%20%3Fplanet%20wdt%3AP18%20%3Fimage%3B%0A%20%20%20%20rdfs%3Alabel%20%3FplanetLabel%3B%0A%20%20%20%20wdt%3AP276%20wd%3AQ7879772.%0A%20%20FILTER(STRSTARTS(%3FplanetLabel%2C%20%22" + planetName + "%22))%0A%7D&format=json";
-  
+
 	//Ajax call to DBPedia
 	$.ajax({
 	  url: encodedThumbnailQuery,
