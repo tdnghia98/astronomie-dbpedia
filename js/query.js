@@ -22,6 +22,7 @@ function insertGeneralInfoIntoTable(result) {
   let gravity = "";
   let pression = "";
   let abstract = "";
+  let speed = "";
 
   // [0] => Accept only the first result?
   if (fields[0].name) {
@@ -83,6 +84,12 @@ function insertGeneralInfoIntoTable(result) {
     abstract = "No abstract found";
   }
 
+  if (fields[0].speed) {
+    speed = fields[0].speed.value + " km/h";
+  } else {
+    speed = "No angular speed found";
+  }
+
   document.getElementById('planet-name').innerHTML = planetName;
   document.getElementById('abstract').innerHTML = abstract;
   document.getElementById('volume').innerHTML = volume;
@@ -93,6 +100,7 @@ function insertGeneralInfoIntoTable(result) {
   document.getElementById('surface').innerHTML = surface;
   document.getElementById('gravity').innerHTML = gravity;
   document.getElementById('pression').innerHTML = pression;
+  document.getElementById('speed').innerHTML = speed;
 
   preloadSimilarPlanetsCoeff(fields);
 }
@@ -107,6 +115,7 @@ function emptyTable() {
   document.getElementById('surface').innerHTML = "";
   document.getElementById('gravity').innerHTML = "";
   document.getElementById('pression').innerHTML = "";
+  document.getElementById('speed').innerHTML = "";
   document.getElementById("satellites").innerHTML = "";
 }
 
@@ -181,6 +190,7 @@ function getPlanetGeneralInfo() {
   $.ajax({
     url: encodedGeneralInfoQuery,
     success: function (result) {
+      console.log(result)
       if (result.results.bindings.length == 0) {
         console.log("No results found for this planet")
       }

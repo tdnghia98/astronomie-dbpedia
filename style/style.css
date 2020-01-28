@@ -63,3 +63,7 @@
     width: 100%;
     overflow: hidden;
 }
+
+#similar-planet-tbody tr td{
+    cursor: pointer;
+}
