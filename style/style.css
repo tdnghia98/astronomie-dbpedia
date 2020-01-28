@@ -59,12 +59,21 @@
     padding: 15px;
 }
 
+.js-example-basic-single {
+    width: 100%;
+    margin-bottom: 100px;
+}
+
+#getInfo {
+    margin-top: 10px;
+}
+
 #myRange {
     width: 100%;
     overflow: hidden;
 }
 
-#similar-planet-tbody tr td{
+#similar-planet-tbody tr td {
     cursor: pointer;
 }
 
