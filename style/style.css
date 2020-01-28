@@ -67,3 +67,7 @@
 #similar-planet-tbody tr td{
     cursor: pointer;
 }
+
+#searchSimilaireBouton {
+    margin-bottom: 8px;
+}
